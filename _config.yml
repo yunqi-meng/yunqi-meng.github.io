@@ -5,10 +5,10 @@
 # Site
 title: Hexo
 subtitle: ''
-description: ''
-keywords:
+description: 记录学习与生活的个人博客
+keywords: 技术,编程,博客,Hexo
 author: John Doe
-language: en
+language: zh-CN
 timezone: ''
 
 # URL
@@ -96,9 +96,88 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: butterfly
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: git
+  repo: https://github.com/yunqi-meng/yunqi-meng.github.io.git
+  branch: gh-pages
+  message: "Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }}"
+
+# Admin
+admin:
+  username: admin
+  password_hash: $2a$10$6pWX3IoOf63QDZyFrs279OcwifK6JvLk12IhBfX0VCVzwOTUBFCnO
+  secret: hexoadminsecretkey123456
+  deployCommand: './deploy.bat'
+  port: 4000
+  expire: 60*1
+
+# Search
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
+
+# Sitemap
+sitemap:
+  path: sitemap.xml
+  rel: false
+  tags: true
+  categories: true
+
+# Robots
+robotstxt:
+  useragent: "*"
+  allow:
+    - /
+  disallow:
+    - /admin/
+    - /js/
+    - /css/
+  sitemap: /sitemap.xml
+
+# Lazyload
+lazyload:
+  enable: true
+  onlypost: false
+  loadingImg: /images/loading.gif
+
+# Feed
+feed:
+  type:
+    - atom
+    - rss2
+  path:
+    - atom.xml
+    - rss2.xml
+  limit: 20
+  hub:
+  content:
+  content_limit: 140
+  content_limit_delim: ' '
+  order_by: -date
+  icon: icon.png
+  autodiscovery: true
+  template:
+
+# HTML/CSS/JS 压缩优化
+neat_enable: true
+neat_html:
+  enable: true
+  exclude:
+neat_css:
+  enable: true
+  exclude:
+    - '*.min.css'
+neat_js:
+  enable: true
+  mangle: true
+  output:
+  compress:
+  exclude:
+    - '*.min.js'
+
