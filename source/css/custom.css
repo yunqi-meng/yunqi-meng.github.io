@@ -176,11 +176,13 @@ body {
 
 /* Page Header */
 #page-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, #425AEF 0%, #667eea 100%) !important;
+  height: 50vh !important;
+  min-height: 300px !important;
 }
 
 #page-header::before {
-  background: rgba(0, 0, 0, 0.2) !important;
+  background: rgba(0, 0, 0, 0.15) !important;
 }
 
 #site-info #site-title {
