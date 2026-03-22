@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Hexo</title>
+    <title>Yunqi Meng</title>
     <link>https://yunqi-meng.github.io/</link>
     <description>记录学习与生活的个人博客</description>
     <language>zh-CN</language>
-    <copyright>All rights reserved 2026, John Doe</copyright>
+    <copyright>All rights reserved 2026, 孟俊澎</copyright>
     <lastBuildDate>Sun, 22 Mar 2026 02:32:05 GMT</lastBuildDate>
     <generator>Hexo</generator>
     <image>
       <url>https://yunqi-meng.github.io/icon.png</url>
-      <title>Hexo</title>
+      <title>Yunqi Meng</title>
       <link>https://yunqi-meng.github.io/</link>
     </image>
     <atom:link href="https://yunqi-meng.github.io/rss2.xml" rel="self" type="application/rss+xml"/>
@@ -20,7 +20,7 @@
       <description>
         <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a>]]>
       </description>
-      <author>John Doe</author>
+      <author>孟俊澎</author>
       <pubDate>Sun, 22 Mar 2026 02:32:05 GMT</pubDate>
     </item>
   </channel>
