@@ -1,15 +1,15 @@
 @echo off
-title Deploy Blog
+title Deploy via GitHub Actions
 color 0A
 
 cd /d "%~dp0"
 
 echo ==========================================
-echo    Deploy Blog via GitHub Actions
+echo    Deploy via GitHub Actions
 echo ==========================================
 echo.
 
-echo [1/3] Adding changes...
+echo [1/2] Adding changes...
 git add .
 if errorlevel 1 (
     echo [ERROR] Git add failed
@@ -18,14 +18,8 @@ if errorlevel 1 (
 )
 echo.
 
-echo [2/3] Committing...
+echo [2/2] Committing and pushing to main...
 git commit -m "update: %date% %time%"
-if errorlevel 1 (
-    echo [INFO] Nothing to commit or commit failed
-)
-echo.
-
-echo [3/3] Pushing to main...
 git push origin main
 if errorlevel 1 (
     echo [ERROR] Git push failed
@@ -35,7 +29,7 @@ if errorlevel 1 (
 echo.
 
 echo ==========================================
-echo    Deploy triggered!
+echo    Pushed to main branch!
 echo    GitHub Actions will deploy automatically.
 echo    Website: https://yunqi-meng.github.io
 echo ==========================================

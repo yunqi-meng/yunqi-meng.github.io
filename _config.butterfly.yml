@@ -1,21 +1,12 @@
-# Butterfly 主题配置文件 - Heo 风格
+# Butterfly Theme Configuration - Heo Style
+# Version: 5.5.4
 
-# 主题版本
-version: 5.5.4
-
-# 网站信息
-site_meta:
-  title: Hexo
-  author: John Doe
-  description: 记录学习与生活的个人博客
-  keywords: 技术,编程,博客,Hexo
-
-# 头像配置
+# Avatar
 avatar:
   img: /images/avatar.jpg
   effect: false
 
-# 导航栏
+# Navigation
 nav:
   logo: /images/avatar.jpg
   display_title: true
@@ -27,17 +18,15 @@ nav:
     分类: /categories/ || fas fa-folder-open
     关于: /about/ || fas fa-user
 
-# 首页配置
+# Header
 index_img: /images/default.jpg
 default_top_img: /images/default.jpg
-index_site_info_top: 0px
 
-# 首页文章配置
+# Post
 index_post_content:
   method: 3
   length: 300
 
-# 文章页配置
 post_meta:
   date_type: created
   date_format: YYYY-MM-DD
@@ -45,7 +34,7 @@ post_meta:
   tags: true
   label: true
 
-# 文章页目录
+# TOC
 toc:
   enable: true
   number: false
@@ -53,21 +42,20 @@ toc:
   init_open: true
   layout: right
 
-# 文章页版权声明
+# Copyright
 post_copyright:
   enable: true
   decode: false
-  author_href:
   license: CC BY-NC-SA 4.0
   license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
-# 相关文章推荐
+# Related posts
 related_post:
   enable: true
   limit: 6
   date_type: created
 
-# 代码块配置
+# Code blocks
 highlight_theme: mac
 highlight_copy: true
 highlight_lang: true
@@ -75,52 +63,36 @@ highlight_height_limit: false
 highlight_shrink: false
 code_word_wrap: false
 
-# 搜索配置
+# Search
 local_search:
   enable: true
   preload: false
-  CDN:
 
-# 评论配置（保留但禁用）
+# Comments (disabled)
 comments:
-  use: 
+  use:
   text: true
   lazyload: true
   count: false
   card_post_count: false
 
-# Twikoo 评论系统
+# Twikoo (configured but disabled)
 twikoo:
-  envId: https://twikoo.your-env-id.com
+  envId:
   region:
   option:
-  visitor: true
+  visitor: false
 
-# 图片配置
+# Lazyload
 image_lazyload:
   enable: true
   field: site
   placeholder: /images/loading.gif
 
-# 图片灯箱
+# Lightbox
 fancybox: true
 
-# 字体配置
-font:
-  enable: true
-  font-family: 'Inter, PingFang SC, Microsoft YaHei, -apple-system, BlinkMacSystemFont'
-  font-size: 16px
-  code-font-family: 'JetBrains Mono, Fira Code, Consolas, Monaco, monospace'
-
-# 颜色配置（Heo 风格）
-colors:
-  primary: '#425AEF'
-  secondary: '#FF6B6B'
-  text: '#1F2937'
-  background: '#FAFAFA'
-  code_background: '#F8F9FA'
-
-# 深色模式
+# Dark mode
 darkmode:
   enable: true
   button: true
@@ -128,17 +100,7 @@ darkmode:
   startDark: '22:00'
   endDark: '06:00'
 
-# 首页布局
-index_layout:
-  type: 3
-  category:
-    enable: true
-    limit: 3
-  tag:
-    enable: true
-    limit: 3
-
-# 个人信息卡片
+# Sidebar
 aside:
   enable: true
   hide: false
@@ -147,7 +109,7 @@ aside:
   position: right
   card_author:
     enable: true
-    description: 热爱技术，专注前端开发
+    description: 热爱技术，专注开发
     button:
       enable: true
       icon: fab fa-github
@@ -181,83 +143,15 @@ aside:
     last_push_date: true
     runtime: true
 
-# 底部配置
+# Footer
 footer:
   owner:
     enable: true
     since: 2024
-    copyright: John Doe
-  custom_text: 
+  custom_text:
   copyright: true
-  ICP: 
 
-# 骨架屏
-skeleton:
-  enable: true
-
-# 加载动画
-loading:
-  full_page: false
-  pace: true
-
-# 侧边栏设置
-sidebar:
-  display: always
-  offset: 12
-  b2t: true
-  scrollpercent: true
-  onmobile: true
-
-# 运行时间
-runtimeshow:
-  enable: true
-  publish_date: 2024/01/01 00:00:00
-
-# 字数统计
-wordcount:
-  enable: true
-  post_wordcount: true
-  min2read: true
-  total_wordcount: true
-
-# 阅读时长
-readmode: true
-
-# 阅读进度
-reading_progress:
-  enable: true
-  start_left: true
-  height: 3px
-  color: '#425AEF'
-  position: top
-
-# 复制配置
-copy:
-  enable: true
-  copyright:
-    enable: true
-    limit_count: 50
-
-# 分享配置
-sharejs:
-  enable: false
-
-# 验证
-verification:
-  google: 
-  baidu: 
-  bing: 
-
-# 数学公式
-mathjax:
-  enable: false
-
-# Mermaid
-mermaid:
-  enable: false
-
-# Inject
-# Insert the code to head (before '</head>' tag) and the bottom (before '</body>' tag)
+# Inject custom CSS/JS
 inject:
   head:
     - <link rel="stylesheet" href="/css/custom.css">
@@ -268,35 +162,3 @@ inject:
 CDN:
   internal_provider: local
   third_party_provider: jsdelivr
-
-# PWA
-pwa:
-  enable: false
-
-# Open Graph
-open_graph:
-  enable: true
-  meta_img: /images/default.jpg
-  twitter_card: summary_large_image
-
-# RSS
-rss:
-  atom: /atom.xml
-  rss2: /rss2.xml
-
-# 移动端适配
-mobile:
-  layout: simple
-  meta: true
-
-# 性能优化
-performance:
-  enable: true
-  prefetch: true
-  preconnect: true
-
-# 安全
-security:
-  enable: true
-  csp:
-    enable: false
