@@ -2,14 +2,13 @@
 # Docs: https://hexo.io/docs/configuration.html
 
 # Site
-site:
-  title: Yunqi Meng
-  subtitle: ''
-  description: 记录学习与生活的个人博客
-  keywords: 技术,编程,博客,Hexo
-  author: 孟俊澎
-  language: zh-CN
-  timezone: ''
+title: Yunqi Meng
+subtitle: ''
+description: 记录学习与生活的个人博客
+keywords: 技术,编程,博客,Hexo
+author: 孟俊澎
+language: zh-CN
+timezone: ''
 
 # URL
 url: https://yunqi-meng.github.io
