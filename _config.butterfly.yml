@@ -1,7 +1,7 @@
-# Butterfly 主题配置文件
+# Butterfly 主题配置文件 - Heo 风格
 
 # 主题版本
-version: 4.13.0
+version: 5.5.4
 
 # 网站信息
 site_meta:
@@ -16,11 +16,11 @@ nav:
   display_title: true
   fixed: true
   menu:
-    Home: / || fas fa-home
-    Archives: /archives/ || fas fa-archive
-    Tags: /tags/ || fas fa-tags
-    Categories: /categories/ || fas fa-folder-open
-    About: /about/ || fas fa-user
+    首页: / || fas fa-home
+    归档: /archives/ || fas fa-archive
+    标签: /tags/ || fas fa-tags
+    分类: /categories/ || fas fa-folder-open
+    关于: /about/ || fas fa-user
 
 # 首页配置
 index_img: /images/default.jpg
@@ -30,11 +30,12 @@ index_site_info_top: 0px
 # 首页文章配置
 index_post_content:
   method: 3
-  length: 500
+  length: 300
 
 # 文章页配置
 post_meta:
   date_type: created
+  date_format: YYYY-MM-DD
   categories: true
   tags: true
   label: true
@@ -42,7 +43,7 @@ post_meta:
 # 文章页目录
 toc:
   enable: true
-  number: true
+  number: false
   expand_all: false
   init_open: true
   layout: right
@@ -60,15 +61,9 @@ related_post:
   enable: true
   limit: 6
   date_type: created
-  params:
-    maxSize: 5
-    minSimilarity: 0.5
-    keywordsLimit: 50
-    autoCover: true
-    multiple: 3
 
 # 代码块配置
-highlight_theme: mac light
+highlight_theme: mac
 highlight_copy: true
 highlight_lang: true
 highlight_height_limit: false
@@ -81,7 +76,7 @@ local_search:
   preload: false
   CDN:
 
-# 评论配置
+# 评论配置（保留但禁用）
 comments:
   use: 
   text: true
@@ -108,17 +103,17 @@ fancybox: true
 # 字体配置
 font:
   enable: true
-  font-family: 'PingFang SC, Microsoft YaHei, Inter, -apple-system, BlinkMacSystemFont, system-ui'
+  font-family: 'Inter, PingFang SC, Microsoft YaHei, -apple-system, BlinkMacSystemFont'
   font-size: 16px
   code-font-family: 'JetBrains Mono, Fira Code, Consolas, Monaco, monospace'
 
-# 颜色配置
+# 颜色配置（Heo 风格）
 colors:
-  primary: '#3b82f6'
-  secondary: '#f97316'
-  text: '#1f2937'
-  background: '#fafafa'
-  code_background: '#f5f5f5'
+  primary: '#425AEF'
+  secondary: '#FF6B6B'
+  text: '#1F2937'
+  background: '#FAFAFA'
+  code_background: '#F8F9FA'
 
 # 深色模式
 darkmode:
@@ -127,8 +122,6 @@ darkmode:
   autoChangeMode: 1
   startDark: '22:00'
   endDark: '06:00'
-  darkmode_background: '#111827'
-  darkmode_text: '#e5e7eb'
 
 # 首页布局
 index_layout:
@@ -136,11 +129,9 @@ index_layout:
   category:
     enable: true
     limit: 3
-    icon: fas fa-folder-open
   tag:
     enable: true
     limit: 3
-    icon: fas fa-tags
 
 # 个人信息卡片
 aside:
@@ -151,11 +142,11 @@ aside:
   position: right
   card_author:
     enable: true
-    description: 
+    description: 热爱技术，专注前端开发
     button:
       enable: true
       icon: fab fa-github
-      text: Follow Me
+      text: 关注我
       link: https://github.com/yunqi-meng
   card_announcement:
     enable: true
@@ -164,19 +155,15 @@ aside:
     enable: true
     limit: 5
     sort: updated
-    sort_order: 
   card_categories:
     enable: true
     limit: 8
     expand: none
-    sort_order: 
   card_tags:
     enable: true
-    limit: 10
-    color: false
+    limit: 20
+    color: true
     orderby: random
-    order: 1
-    count: 20
   card_archives:
     enable: true
     type: monthly
@@ -188,7 +175,6 @@ aside:
     post_count: true
     last_push_date: true
     runtime: true
-    sort_order: false
 
 # 底部配置
 footer:
@@ -196,15 +182,13 @@ footer:
     enable: true
     since: 2024
     copyright: John Doe
-  custom_text:
+  custom_text: 
   copyright: true
   ICP: 
-  CDN: 
 
 # 骨架屏
 skeleton:
   enable: true
-  image: /images/skeleton.gif
 
 # 加载动画
 loading:
@@ -223,9 +207,6 @@ sidebar:
 runtimeshow:
   enable: true
   publish_date: 2024/01/01 00:00:00
-  page_unit: 天
-  site_unit: 天
-  stop_time: 
 
 # 字数统计
 wordcount:
@@ -242,7 +223,7 @@ reading_progress:
   enable: true
   start_left: true
   height: 3px
-  color: '#3b82f6'
+  color: '#425AEF'
   position: top
 
 # 复制配置
@@ -256,25 +237,6 @@ copy:
 sharejs:
   enable: false
 
-# 更多推荐
-recommends:
-  enable: false
-
-# 广告
-ad:
-  index:
-    enable: false
-    limit: 3
-    site_ads:
-  post:
-    enable: false
-    limit: 3
-    site_ads:
-  aside:
-    enable: false
-    limit: 3
-    site_ads:
-
 # 验证
 verification:
   google: 
@@ -284,73 +246,33 @@ verification:
 # 数学公式
 mathjax:
   enable: false
-  per_page: false
-  mathjax:
-    tex:
-      inlineMath: 
-        - ['$', '$']
-        - ['\\(', '\\)']
-      displayMath:
-        - ['$$', '$$']
-        - ['\\[', '\\]']
-      tags: 'ams'
-      options:
-        skipTags:
-          - 'script'
-          - 'noscript'
-          - 'style'
-          - 'textarea'
-          - 'pre'
-        include:
-          - 'head'
-          - 'body'
-    options:
-      renderActions:
-        - find
-        - findMathML
-      menuItems:
-        - contextMenu
-        - zoom
-        - toggle
-    katex:
-      css:
-        js:
-        config:
-          macros:
-  katex:
-    enable: false
-    per_page: false
-    copy_tex: true
 
 # Mermaid
 mermaid:
   enable: false
-  theme: 
+
+# Inject
+# Insert the code to head (before '</head>' tag) and the bottom (before '</body>' tag)
+inject:
+  head:
+    - <link rel="stylesheet" href="/css/custom.css">
+  bottom:
+    - <script src="/js/main.js"></script>
 
 # CDN
 CDN:
-  css:
-    - /css/custom.css
-  js:
-    - /js/main.js
+  internal_provider: local
+  third_party_provider: jsdelivr
 
 # PWA
 pwa:
   enable: false
-  manifest: /manifest.json
-  apple_touch_icon: /img/pwa/apple-touch-icon.png
-  favicon_32_32: /img/pwa/32.png
-  favicon_16_16: /img/pwa/16.png
-  mask_icon: /img/pwa/safari-pinned-tab.svg
 
 # Open Graph
 open_graph:
   enable: true
   meta_img: /images/default.jpg
   twitter_card: summary_large_image
-  google_plus: 
-  fb_admin_id: 
-  fb_app_id: 
 
 # RSS
 rss:
@@ -373,4 +295,3 @@ security:
   enable: true
   csp:
     enable: false
-    policies: 
