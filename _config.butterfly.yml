@@ -10,9 +10,14 @@ site_meta:
   description: 记录学习与生活的个人博客
   keywords: 技术,编程,博客,Hexo
 
+# 头像配置
+avatar:
+  img: /images/avatar.jpg
+  effect: false
+
 # 导航栏
 nav:
-  logo: /images/avatar.png
+  logo: /images/avatar.jpg
   display_title: true
   fixed: true
   menu:
