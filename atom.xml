@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <author>
+    <name>John Doe</name>
+  </author>
+  <generator uri="https://hexo.io/">Hexo</generator>
+  <icon>https://yunqi-meng.github.io/icon.png</icon>
+  <id>https://yunqi-meng.github.io/</id>
+  <link href="https://yunqi-meng.github.io/" rel="alternate"/>
+  <link href="https://yunqi-meng.github.io/atom.xml" rel="self"/>
+  <rights>All rights reserved 2026, John Doe</rights>
+  <subtitle>记录学习与生活的个人博客</subtitle>
+  <title>Hexo</title>
+  <updated>2026-03-22T02:32:05.119Z</updated>
+  <entry>
+    <author>
+      <name>John Doe</name>
+    </author>
+    <id>https://yunqi-meng.github.io/2026/03/22/hello-world/</id>
+    <link href="https://yunqi-meng.github.io/2026/03/22/hello-world/"/>
+    <published>2026-03-22T02:32:05.119Z</published>
+    <summary>
+      <![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a>]]>
+    </summary>
+    <title>Hello World</title>
+    <updated>2026-03-22T02:32:05.119Z</updated>
+  </entry>
+</feed>
