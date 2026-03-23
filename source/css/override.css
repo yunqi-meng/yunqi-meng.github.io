@@ -1,0 +1,332 @@
+/**
+ * Butterfly 主题样式覆盖
+ * 覆盖 Butterfly 主题默认样式，使用现代化设计
+ */
+
+/* ============================================
+   全局重置
+   ============================================ */
+
+#body-wrap {
+  margin-top: 0 !important;
+}
+
+/* ============================================
+   导航栏覆盖
+   ============================================ */
+
+#nav {
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+[data-theme="dark"] #nav {
+  background: rgba(10, 10, 10, 0.85) !important;
+}
+
+#nav.scrolled {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-bottom-color: var(--border-light, #f0f0f0) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="dark"] #nav.scrolled {
+  background: rgba(10, 10, 10, 0.95) !important;
+}
+
+/* 移动端菜单按钮 */
+.nav-toggle {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-tertiary, #f3f4f6);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+[data-theme="dark"] .nav-toggle {
+  background: var(--bg-tertiary, #262626);
+}
+
+.nav-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text-primary, #1a1a1a);
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.nav-toggle span::before,
+.nav-toggle span::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: var(--text-primary, #1a1a1a);
+  transition: all 0.2s ease;
+}
+
+.nav-toggle span::before {
+  top: -6px;
+}
+
+.nav-toggle span::after {
+  top: 6px;
+}
+
+.nav-toggle.active span {
+  background: transparent;
+}
+
+.nav-toggle.active span::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.nav-toggle.active span::after {
+  top: 0;
+  transform: rotate(-45deg);
+}
+
+/* 移动端菜单 */
+.nav-menu {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  background: var(--bg-primary, #ffffff);
+  border-bottom: 1px solid var(--border-light, #f0f0f0);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.25s ease;
+  z-index: 100;
+  padding: 16px;
+}
+
+[data-theme="dark"] .nav-menu {
+  background: var(--bg-primary, #0a0a0a);
+}
+
+.nav-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-menu li {
+  margin-bottom: 4px;
+}
+
+.nav-menu a {
+  display: block;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-secondary, #525252);
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.nav-menu a:hover {
+  color: var(--primary, #5e60ce);
+  background: var(--bg-tertiary, #f3f4f6);
+}
+
+/* PC 端隐藏汉堡按钮 */
+@media (min-width: 769px) {
+  .nav-toggle {
+    display: none !important;
+  }
+  
+  .nav-menu {
+    position: static;
+    background: transparent;
+    border: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    padding: 0;
+  }
+  
+  .nav-menu ul {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .nav-menu li {
+    margin-bottom: 0;
+  }
+  
+  .nav-menu a {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+/* ============================================
+   侧边栏覆盖
+   ============================================ */
+
+#aside-content {
+  width: 300px !important;
+}
+
+.card-widget {
+  background: var(--bg-primary, #ffffff) !important;
+  border: 1px solid var(--border-light, #f0f0f0) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.25s ease !important;
+}
+
+.card-widget:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ============================================
+   文章卡片覆盖
+   ============================================ */
+
+.recent-post-item {
+  background: var(--bg-primary, #ffffff) !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--border-light, #f0f0f0) !important;
+  overflow: hidden !important;
+  transition: all 0.25s ease !important;
+}
+
+.recent-post-item:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 10px 25px -5px rgba(94, 96, 206, 0.12), 0 8px 10px -5px rgba(94, 96, 206, 0.08) !important;
+}
+
+/* ============================================
+   右侧按钮覆盖
+   ============================================ */
+
+#rightside > div > button {
+  background: var(--bg-primary, #ffffff) !important;
+  border: 1px solid var(--border-light, #f0f0f0) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+#rightside > div > button:hover {
+  background: var(--primary, #5e60ce) !important;
+  color: #ffffff !important;
+  border-color: var(--primary, #5e60ce) !important;
+}
+
+/* ============================================
+   页脚覆盖
+   ============================================ */
+
+#footer {
+  background: var(--bg-primary, #ffffff) !important;
+  border-top: 1px solid var(--border-light, #f0f0f0) !important;
+}
+
+/* ============================================
+   搜索框覆盖
+   ============================================ */
+
+#search-dialog {
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* ============================================
+   代码块覆盖
+   ============================================ */
+
+#article-container pre {
+  background: var(--bg-tertiary, #f3f4f6) !important;
+  border: 1px solid var(--border-light, #f0f0f0) !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+}
+
+/* ============================================
+   隐藏不需要的元素
+   ============================================ */
+
+/* 隐藏顶部图 */
+#page-header.full_page {
+  display: none !important;
+}
+
+/* 调整头部高度 */
+#page-header {
+  min-height: 40vh !important;
+}
+
+/* 隐藏滚动提示 */
+#scroll-down {
+  display: none !important;
+}
+
+/* ============================================
+   自定义滚动条
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-tertiary, #f3f4f6);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-dark, #d4d4d4);
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600, #757575);
+}
+
+/* ============================================
+   分页样式覆盖
+   ============================================ */
+
+#pagination .page-number,
+#pagination .extend {
+  border: 1px solid var(--border-light, #f0f0f0) !important;
+  border-radius: 8px !important;
+  background: var(--bg-primary, #ffffff) !important;
+  transition: all 0.15s ease !important;
+}
+
+#pagination .page-number:hover,
+#pagination .extend:hover {
+  background: var(--primary, #5e60ce) !important;
+  color: #ffffff !important;
+  border-color: var(--primary, #5e60ce) !important;
+  transform: translateY(-2px) !important;
+}
+
+#pagination .page-number.current {
+  background: var(--primary, #5e60ce) !important;
+  color: #ffffff !important;
+  border-color: var(--primary, #5e60ce) !important;
+}

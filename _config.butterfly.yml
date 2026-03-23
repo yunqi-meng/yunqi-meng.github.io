@@ -154,9 +154,10 @@ footer:
 # Inject custom CSS/JS
 inject:
   head:
-    - <link rel="stylesheet" href="/css/custom.css">
+    - <link rel="stylesheet" href="/css/modern.css">
+    - <link rel="stylesheet" href="/css/override.css">
   bottom:
-    - <script src="/js/main.js"></script>
+    - <script src="/js/modern.js"></script>
 
 # CDN
 CDN:
