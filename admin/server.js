@@ -12,7 +12,7 @@ const util = require('util');
 
 const execPromise = util.promisify(exec);
 const app = express();
-const PORT = 4006;
+const PORT = 4007;
 
 // 项目根目录
 const ROOT_DIR = path.dirname(__dirname);
