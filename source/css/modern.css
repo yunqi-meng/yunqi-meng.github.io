@@ -4,11 +4,11 @@
    ============================================ */
 
 :root {
-  /* ===== 主色调系统 ===== */
-  --primary: #5e60ce;
-  --primary-light: #7c7ff2;
-  --primary-dark: #424292;
-  --primary-soft: rgba(94, 96, 206, 0.08);
+  /* ===== 主色调系统 - 现代蓝 ===== */
+  --primary: #2563eb;
+  --primary-light: #3b82f6;
+  --primary-dark: #1d4ed8;
+  --primary-soft: rgba(37, 99, 235, 0.08);
   
   /* ===== 中性色系统 ===== */
   --gray-50: #fafafa;
@@ -83,10 +83,10 @@
 
 /* ===== 深色模式 ===== */
 [data-theme="dark"] {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #141414;
-  --bg-tertiary: #1a1a1a;
-  --bg-elevated: #1f1f1f;
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-elevated: #1e293b;
   
   --text-primary: #f5f5f5;
   --text-secondary: #d4d4d4;
@@ -1459,6 +1459,39 @@ mjx-container[jax="CHTML"][display="true"] {
   }
 }
 
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateX(-50%) translateY(0);
@@ -1470,6 +1503,36 @@ mjx-container[jax="CHTML"][display="true"] {
     transform: translateX(-50%) translateY(-5px);
   }
 }
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 页面加载动画 */
+.recent-post-item,
+.card-widget,
+#post,
+#tag,
+#category,
+#archive {
+  animation: fadeInUp 0.6s var(--transition-spring) backwards;
+}
+
+.recent-post-item:nth-child(1) { animation-delay: 0.1s; }
+.recent-post-item:nth-child(2) { animation-delay: 0.2s; }
+.recent-post-item:nth-child(3) { animation-delay: 0.3s; }
+.recent-post-item:nth-child(4) { animation-delay: 0.4s; }
+.recent-post-item:nth-child(5) { animation-delay: 0.5s; }
+
+.card-widget:nth-child(1) { animation-delay: 0.1s; }
+.card-widget:nth-child(2) { animation-delay: 0.2s; }
+.card-widget:nth-child(3) { animation-delay: 0.3s; }
+.card-widget:nth-child(4) { animation-delay: 0.4s; }
 
 /* ============================================
    响应式设计
