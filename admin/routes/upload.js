@@ -77,7 +77,8 @@ router.post('/:postName', async (req, res) => {
     await fs.writeFile(filePath, Buffer.from(base64Data, 'base64'));
     
     // 生成 Markdown 引用格式（用于 Hexo 博客）
-    const markdownRef = `![](/${postName}/${finalFilename})`;
+    // 使用 asset_img 标签，Hexo 会自动处理文章资源文件夹
+    const markdownRef = `{% asset_img ${finalFilename} %}`;
 
     // 管理后台预览路径
     const previewPath = `/posts-assets/${postName}/${finalFilename}`;
@@ -125,7 +126,7 @@ router.get('/:postName', async (req, res) => {
       .map(f => ({
         filename: f,
         path: `/posts-assets/${postName}/${f}`,
-        markdown: `![](/${postName}/${f})`
+        markdown: `{% asset_img ${f} %}`
       }));
     
     res.json({ success: true, images });
