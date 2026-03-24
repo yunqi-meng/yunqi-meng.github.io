@@ -12,7 +12,7 @@ const util = require('util');
 
 const execPromise = util.promisify(exec);
 const app = express();
-const PORT = 4005;
+const PORT = 4006;
 
 // 项目根目录
 const ROOT_DIR = path.dirname(__dirname);
@@ -25,6 +25,10 @@ module.exports = { ROOT_DIR, POSTS_DIR };
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// 静态文件服务 - 文章资源文件夹（图片等）
+// 将 /posts-assets 映射到 source/_posts 目录
+app.use('/posts-assets', express.static(POSTS_DIR));
 
 // CORS - 仅允许本地访问
 app.use((req, res, next) => {

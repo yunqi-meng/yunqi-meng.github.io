@@ -76,13 +76,16 @@ router.post('/:postName', async (req, res) => {
     // 写入文件
     await fs.writeFile(filePath, Buffer.from(base64Data, 'base64'));
     
-    // 生成 Markdown 引用格式
+    // 生成 Markdown 引用格式（用于 Hexo 博客）
     const markdownRef = `![](/${postName}/${finalFilename})`;
-    
+
+    // 管理后台预览路径
+    const previewPath = `/posts-assets/${postName}/${finalFilename}`;
+
     res.json({
       success: true,
       filename: finalFilename,
-      path: `/${postName}/${finalFilename}`,
+      path: previewPath,
       markdown: markdownRef,
       message: 'Image uploaded successfully'
     });
@@ -121,7 +124,7 @@ router.get('/:postName', async (req, res) => {
       .filter(f => imageExtensions.includes(path.extname(f).toLowerCase()))
       .map(f => ({
         filename: f,
-        path: `/${postName}/${f}`,
+        path: `/posts-assets/${postName}/${f}`,
         markdown: `![](/${postName}/${f})`
       }));
     
