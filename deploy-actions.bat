@@ -31,75 +31,43 @@ echo    Deploying to GitHub Pages
 echo ==========================================
 echo.
 
-echo [1/5] Cleaning cache...
-call hexo clean
-if errorlevel 1 (
-    echo [ERROR] Clean failed
-    pause
-    exit /b 1
-)
-echo.
-
-echo [2/5] Generating static files...
-call hexo generate
-if errorlevel 1 (
-    echo [ERROR] Generate failed
-    pause
-    exit /b 1
-)
-echo.
-
-echo [3/5] Checking git status...
+echo [1/3] Checking git changes...
 git status --short
 if errorlevel 1 (
-    echo [ERROR] Git status check failed
+    echo [ERROR] Git check failed
     pause
     exit /b 1
 )
-echo.
 
-echo [4/5] Adding changes...
+echo.
+echo [2/3] Committing changes...
 git add .
-if errorlevel 1 (
-    echo [ERROR] Git add failed
-    pause
-    exit /b 1
-)
-echo.
-
-echo [5/5] Committing and pushing...
 git commit -m "deploy: %date% %time%"
 if errorlevel 1 (
-    echo [INFO] No changes to commit
     echo.
     echo ==========================================
-    echo    No changes detected
+    echo    No changes to commit
     echo ==========================================
     pause
     goto end
 )
 
+echo.
+echo [3/3] Pushing to GitHub...
 git push origin main
 if errorlevel 1 (
-    echo [ERROR] Git push failed
-    echo.
-    echo Possible reasons:
-    echo - Network connection issue
-    echo - Git credentials expired
-    echo - Branch conflict
+    echo [ERROR] Push failed!
     pause
     exit /b 1
 )
-echo.
 
-echo ==========================================
-echo    Successfully pushed to main!
 echo.
-echo    GitHub Actions is now deploying...
+echo ==========================================
+echo    Successfully pushed!
+echo.
+echo    GitHub Actions is building...
 echo    Website: https://yunqi-meng.github.io
 echo    Actions: https://github.com/yunqi-meng/yunqi-meng.github.io/actions
-echo.
-echo    Deployment will complete in 1-2 minutes
 echo ==========================================
 pause
 goto end
@@ -110,28 +78,11 @@ echo ==========================================
 echo    Clean and Generate
 echo ==========================================
 echo.
-
-echo [1/2] Cleaning cache...
 call hexo clean
-if errorlevel 1 (
-    echo [ERROR] Clean failed
-    pause
-    exit /b 1
-)
-echo.
-
-echo [2/2] Generating static files...
 call hexo generate
-if errorlevel 1 (
-    echo [ERROR] Generate failed
-    pause
-    exit /b 1
-)
 echo.
-
 echo ==========================================
 echo    Generated successfully!
-echo    Files are in ./public folder
 echo ==========================================
 pause
 goto end
@@ -142,10 +93,8 @@ echo ==========================================
 echo    Starting Local Server
 echo ==========================================
 echo.
-echo    Server will start at: http://localhost:4000
-echo    Press Ctrl+C to stop
-echo.
-timeout /t 2 /nobreak >nul
+echo    Server: http://localhost:4000
+timeout /t 1 /nobreak >nul
 start http://localhost:4000
 call hexo server
 goto end

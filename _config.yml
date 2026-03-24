@@ -38,7 +38,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 syntax_highlighter: highlight.js
@@ -148,6 +148,11 @@ feed:
   icon: icon.png
   autodiscovery: true
   template:
+
+# Markdown 渲染配置
+marked:
+  prependRoot: true
+  postAsset: true
 
 # HTML/CSS/JS 压缩
 neat_enable: true
