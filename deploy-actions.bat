@@ -1,6 +1,7 @@
 @echo off
 title Deploy Blog
 color 0A
+setlocal enabledelayedexpansion
 
 cd /d "%~dp0"
 
@@ -32,21 +33,48 @@ echo ==========================================
 echo.
 
 echo [1/3] Checking git changes...
-git status --short
+
+:: Check if git repository exists
+git rev-parse --git-dir >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] Git check failed
+    echo [ERROR] Not a git repository
     pause
     exit /b 1
 )
 
-echo.
-echo [2/3] Committing changes...
-git add .
-git commit -m "deploy: %date% %time%"
-if errorlevel 1 (
+:: Check for uncommitted changes (staged or unstaged)
+git diff --quiet HEAD
+set has_unstaged=!errorlevel!
+git diff --cached --quiet
+set has_staged=!errorlevel!
+
+if !has_unstaged! equ 0 if !has_staged! equ 0 (
     echo.
     echo ==========================================
     echo    No changes to commit
+    echo    Working tree is clean
+    echo ==========================================
+    pause
+    goto end
+)
+
+:: Show current status
+git status --short
+
+echo.
+echo [2/3] Committing changes...
+git add .
+
+:: Generate timestamp without colons (avoid Windows time format issues)
+for /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c-%%a-%%b)
+for /f "tokens=1-2 delims=: " %%a in ('time /t') do (set mytime=%%a%%b)
+set timestamp=!mydate! !mytime!
+
+git commit -m "deploy: !timestamp!"
+if errorlevel 1 (
+    echo.
+    echo ==========================================
+    echo    Commit failed or nothing to commit
     echo ==========================================
     pause
     goto end
