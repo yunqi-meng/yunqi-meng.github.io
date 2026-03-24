@@ -125,9 +125,9 @@ robotstxt:
     - /css/
   sitemap: /sitemap.xml
 
-# Lazyload
+# Lazyload - Disabled (using theme's built-in lazyload instead)
 lazyload:
-  enable: true
+  enable: false
   onlypost: false
   loadingImg: /images/loading.gif
 

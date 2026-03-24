@@ -683,7 +683,7 @@ inject:
 # --------------------------------------
 CDN:
   internal_provider: local
-  third_party_provider: jsdelivr
+  third_party_provider: unpkg
   version: true
   custom_format:
   option:

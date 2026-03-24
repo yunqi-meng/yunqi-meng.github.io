@@ -32,7 +32,37 @@ echo    Deploying to GitHub Pages
 echo ==========================================
 echo.
 
-echo [1/3] Checking git changes...
+echo [1/4] Checking remote changes...
+:: Fetch latest changes from remote
+git fetch origin main >nul 2>&1
+if errorlevel 1 (
+    echo [WARNING] Failed to fetch from remote
+)
+
+:: Check if local is behind remote
+git rev-list --left-right --count HEAD...origin/main >nul 2>&1
+if !errorlevel! equ 0 (
+    for /f "tokens=1,2" %%a in ('git rev-list --left-right --count HEAD...origin/main') do (
+        set behind=%%b
+        if !behind! gtr 0 (
+            echo.
+            echo [WARNING] Your branch is behind origin/main by !behind! commit(s)
+            set /p pull_choice="Pull latest changes first? (Y/N): "
+            if /i "!pull_choice!"=="Y" (
+                git pull origin main
+                if errorlevel 1 (
+                    echo [ERROR] Pull failed! Please resolve conflicts manually.
+                    pause
+                    exit /b 1
+                )
+                echo [OK] Successfully pulled latest changes
+            )
+        )
+    )
+)
+
+echo.
+echo [2/4] Checking local changes...
 
 :: Check if git repository exists
 git rev-parse --git-dir >nul 2>&1
@@ -62,7 +92,7 @@ if !has_unstaged! equ 0 if !has_staged! equ 0 (
 git status --short
 
 echo.
-echo [2/3] Committing changes...
+echo [3/4] Committing changes...
 git add .
 
 :: Generate timestamp without colons (avoid Windows time format issues)
@@ -81,7 +111,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/3] Pushing to GitHub...
+echo [4/4] Pushing to GitHub...
 git push origin main
 if errorlevel 1 (
     echo [ERROR] Push failed!
