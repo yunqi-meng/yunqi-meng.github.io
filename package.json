@@ -8,12 +8,13 @@
     "clean": "hexo clean",
     "server": "hexo server",
     "dev": "hexo server --debug",
-    "admin": "hexo server --open"
+    "admin": "node admin/server.js"
   },
   "hexo": {
     "version": "8.1.1"
   },
   "dependencies": {
+    "express": "^4.22.1",
     "hexo": "^8.0.0",
     "hexo-admin": "^2.3.0",
     "hexo-filter-mathjax": "^0.9.1",
