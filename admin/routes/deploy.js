@@ -86,11 +86,14 @@ router.post('/', (req, res) => {
   // 步骤3: 提交
   function doCommit() {
     const now = new Date();
-    const timestamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+    const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const timeStr = `${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+    const timestamp = `${dateStr}_${timeStr}`;
     
     sendLog('💾 步骤 3/4: 提交变更...');
     
-    const gitCommit = spawn('git', ['commit', '-m', `deploy: ${timestamp}`], {
+    const commitMessage = `deploy: ${timestamp}`;
+    const gitCommit = spawn('git', ['commit', '-m', commitMessage], {
       cwd: ROOT_DIR,
       shell: true
     });

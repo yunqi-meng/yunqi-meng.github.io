@@ -2,13 +2,12 @@
 title: LaTeX 公式测试文章
 date: 2026-03-24 10:00:00
 tags:
-  - LaTeX
-  - 数学
-  - 测试
 categories:
-  - 技术
+published: true
+updated: 2026-03-24T12:51:57.373Z
 ---
 
+![](/test-latex/30a65fdd65c5bda43a0bd197c50a60be.jpg)
 这是一篇用于测试 LaTeX 公式渲染的文章。
 
 ## 行内公式

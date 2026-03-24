@@ -1,6 +1,12 @@
 ---
 title: Hello World
+categories:
+tags:
+published: true
+updated: 2026-03-24T12:52:24.528Z
 ---
+
+![](/hello-world/cc74800a31ae266b1c524ca3893469bc.jpg)
 Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
 
 ## Quick Start
