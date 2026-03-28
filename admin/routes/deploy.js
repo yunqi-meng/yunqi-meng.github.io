@@ -6,7 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { exec } = require('child_process');
 const path = require('path');
-const { ROOT_DIR } = require('../paths');
+const { ROOT_DIR } = require('../server');
 const util = require('util');
 const execPromise = util.promisify(exec);
 

@@ -43,17 +43,15 @@ const postsRouter = require('./routes/posts');
 const deployRouter = require('./routes/deploy');
 const configRouter = require('./routes/config');
 const uploadRouter = require('./routes/upload');
-const adminRouter = require('./routes/admin');
 
-app.use('/api/admin', adminRouter);
 app.use('/api/posts', postsRouter);
 app.use('/api/deploy', deployRouter);
 app.use('/api/config', configRouter);
 app.use('/api/upload', uploadRouter);
 
-// 主页 - 提供 source/admin/index.html
+// 主页
 app.get('/', (req, res) => {
-  res.sendFile(path.join(ROOT_DIR, 'source', 'admin', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // 健康检查

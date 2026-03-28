@@ -3,16 +3,44 @@ title: Hello World
 categories:
 tags:
 published: true
-updated: 2026-03-28T08:19:55.998Z
-cover: http://127.0.0.1:4007/posts-assets/hello-world/image1.jpeg
+updated: 2026-03-24T13:17:16.898Z
 ---
+{% asset_img image1.jpeg %}
 {% asset_img 13e652de20bf732f420b18ef1427487e.jpg %}
-
-
-
 {% asset_img cc74800a31ae266b1c524ca3893469bc.jpg %}
 
+Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
 
+## Quick Start
 
-{% asset_img image1.jpeg %}
+### Create a new post
 
+``` bash
+$ hexo new "My New Post"
+```
+
+More info: [Writing](https://hexo.io/docs/writing.html)
+
+### Run server
+
+``` bash
+$ hexo server
+```
+
+More info: [Server](https://hexo.io/docs/server.html)
+
+### Generate static files
+
+``` bash
+$ hexo generate
+```
+
+More info: [Generating](https://hexo.io/docs/generating.html)
+
+### Deploy to remote sites
+
+``` bash
+$ hexo deploy
+```
+
+More info: [Deployment](https://hexo.io/docs/one-command-deployment.html)

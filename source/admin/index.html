@@ -847,21 +847,30 @@
                 // 对于文章，获取对应资源文件夹的图片
                 if (!currentPost.isPage) {
                     const postName = currentPost._id.replace('.md', '');
-                    const res = await fetch(API_BASE + `/upload/${postName}`);
+                    const apiUrl = API_BASE + `/upload/${postName}`;
+                    console.log('加载图片 API URL:', apiUrl);
+                    const res = await fetch(apiUrl);
+                    console.log('API 响应状态:', res.status);
                     
                     if (res.ok) {
                         const result = await res.json();
+                        console.log('API 响应数据:', result);
                         if (result.success) {
                             if (result.images.length === 0) {
                                 imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">暂无图片，请先上传图片</div>';
                             } else {
-                                imageList.innerHTML = result.images.map(image => `
-                                    <div style="border: 1px solid #f0f0f0; border-radius: 8px; padding: 8px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative;">
-                                        <img src="http://localhost:4007${image.path}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
-                                        <div style="font-size: 12px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${image.filename}</div>
-                                        <button class="btn btn-sm" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer;" onclick="setAsCover('http://localhost:4007${image.path}')">设为封面</button>
-                                    </div>
-                                `).join('');
+                                console.log('图片数据:', result.images);
+                                imageList.innerHTML = result.images.map(image => {
+                                    const fullPath = 'http://127.0.0.1:4007' + image.path;
+                                    console.log('图片完整路径:', fullPath);
+                                    return `
+                                        <div style="border: 1px solid #f0f0f0; border-radius: 8px; padding: 8px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative;">
+                                            <img src="${fullPath}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
+                                            <div style="font-size: 12px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${image.filename}</div>
+                                            <button class="btn btn-sm" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer;" onclick="setAsCover('${fullPath}')">设为封面</button>
+                                        </div>
+                                    `;
+                                }).join('');
                             }
                         } else {
                             imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff4d4f;">加载图片失败</div>';
@@ -873,16 +882,32 @@
                     imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">页面不支持设置封面</div>';
                 }
             } catch (err) {
+                console.error('加载图片失败:', err);
                 imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff4d4f;">加载图片失败</div>';
             }
         }
         
         function setAsCover(imagePath) {
+            console.log('setAsCover 被调用，传入路径:', imagePath);
             const coverInput = document.getElementById('postCover');
+            console.log('封面输入框元素:', coverInput);
             if (coverInput) {
-                coverInput.value = imagePath;
+                // 确保路径包含完整的URL前缀
+                let fullPath = imagePath;
+                console.log('原始路径:', fullPath);
+                if (!fullPath.startsWith('http://') && !fullPath.startsWith('https://')) {
+                    fullPath = 'http://127.0.0.1:4007' + fullPath;
+                    console.log('添加URL前缀后:', fullPath);
+                } else {
+                    console.log('路径已经包含完整URL前缀');
+                }
+                coverInput.value = fullPath;
+                console.log('封面输入框值:', coverInput.value);
+                console.log('输入框当前值:', document.getElementById('postCover').value);
                 showToast('封面设置成功');
                 closeImageSelector();
+            } else {
+                console.error('未找到封面输入框');
             }
         }
     </script>
