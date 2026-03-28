@@ -4,7 +4,7 @@ categories:
 tags:
 published: true
 updated: 2026-03-28T10:53:22.541Z
-cover: /hello-world/image1.jpeg
+cover: image1.jpeg
 ---
 {% asset_img image1.jpeg %}
 {% asset_img 13e652de20bf732f420b18ef1427487e.jpg %}

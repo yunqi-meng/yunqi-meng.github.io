@@ -1,13 +1,12 @@
 ---
 title: LaTeX 公式测试文章
 date: 2026-03-24 10:00:00
-tags:
-categories:
+tags: 
+categories: 
 published: true
-updated: 2026-03-28T10:53:16.018Z
-cover: /test-latex/30a65fdd65c5bda43a0bd197c50a60be.jpg
+updated: 2026-03-28T10:58:05.440Z
+cover: 30a65fdd65c5bda43a0bd197c50a60be.jpg
 ---
-![](/test-latex/30a65fdd65c5bda43a0bd197c50a60be.jpg)
 这是一篇用于测试 LaTeX 公式渲染的文章。
 
 ## 行内公式
@@ -93,3 +92,5 @@ for i in range(10):
 **文章结束**
 
 {% asset_img 30a65fdd65c5bda43a0bd197c50a60be.jpg %}
+
+
