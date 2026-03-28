@@ -3,8 +3,8 @@ title: Hello World
 categories:
 tags:
 published: true
-updated: 2026-03-28T08:17:34.176Z
-cover: /posts-assets/hello-world/image1.jpeg
+updated: 2026-03-28T08:19:55.998Z
+cover: http://127.0.0.1:4007/posts-assets/hello-world/image1.jpeg
 ---
 {% asset_img 13e652de20bf732f420b18ef1427487e.jpg %}
 
