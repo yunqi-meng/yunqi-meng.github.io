@@ -7,6 +7,7 @@ const path = require('path');
 
 /**
  * 解析 Markdown 文件的 Front Matter
+ * 支持多种 YAML 格式：标量、数组、布尔值、数字等
  */
 function parseFrontMatter(content) {
   const frontMatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
@@ -19,34 +20,91 @@ function parseFrontMatter(content) {
   const frontMatterText = match[1];
   const body = match[2];
   
-  // 简单解析 YAML
+  // 改进的 YAML 解析逻辑
   const frontMatter = {};
-  frontMatterText.split('\n').forEach(line => {
+  const lines = frontMatterText.split('\n');
+  let currentKey = null;
+  let isArrayMode = false;
+  let arrayValue = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    
+    // 跳过空行和注释
+    if (!line.trim() || line.trim().startsWith('#')) {
+      continue;
+    }
+    
+    // 检查是否是数组项（以 - 开头）
+    if (line.match(/^\s+-\s+/)) {
+      if (isArrayMode && currentKey) {
+        const itemValue = line.replace(/^\s+-\s+/, '').trim();
+        arrayValue.push(parseYamlValue(itemValue));
+      }
+      continue;
+    }
+    
+    // 保存之前的数组值
+    if (isArrayMode && currentKey) {
+      frontMatter[currentKey] = arrayValue;
+      isArrayMode = false;
+      arrayValue = [];
+    }
+    
+    // 解析键值对
     const colonIndex = line.indexOf(':');
     if (colonIndex > 0) {
       const key = line.substring(0, colonIndex).trim();
       let value = line.substring(colonIndex + 1).trim();
       
-      // 移除引号
-      if ((value.startsWith('"') && value.endsWith('"')) ||
-          (value.startsWith("'") && value.endsWith("'"))) {
-        value = value.slice(1, -1);
+      // 如果值为空，可能是多行数组的开始
+      if (!value) {
+        currentKey = key;
+        isArrayMode = true;
+        continue;
       }
       
-      // 解析数组
-      if (value.startsWith('[') && value.endsWith(']')) {
-        value = value.slice(1, -1).split(',').map(v => v.trim().replace(/^["']|["']$/g, ''));
-      }
-      
-      // 解析布尔值
-      if (value === 'true') value = true;
-      if (value === 'false') value = false;
-      
-      frontMatter[key] = value;
+      currentKey = key;
+      frontMatter[key] = parseYamlValue(value);
     }
-  });
+  }
+  
+  // 处理最后一个数组
+  if (isArrayMode && currentKey) {
+    frontMatter[currentKey] = arrayValue;
+  }
   
   return { frontMatter, body };
+}
+
+/**
+ * 解析单个 YAML 值
+ */
+function parseYamlValue(value) {
+  // 移除引号
+  if ((value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'"))) {
+    return value.slice(1, -1);
+  }
+  
+  // 解析数组（内联格式 [item1, item2]）
+  if (value.startsWith('[') && value.endsWith(']')) {
+    return value.slice(1, -1).split(',').map(v => v.trim().replace(/^["']|["']$/g, ''));
+  }
+  
+  // 解析布尔值
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  
+  // 解析数字
+  if (/^\d+(\.\d+)?$/.test(value)) {
+    return Number(value);
+  }
+  
+  // 解析 null
+  if (value === 'null' || value === '~') return null;
+  
+  return value;
 }
 
 /**

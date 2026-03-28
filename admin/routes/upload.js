@@ -6,7 +6,8 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
-const { POSTS_DIR } = require('../server');
+const { POSTS_DIR } = require('../paths');
+const sharp = require('sharp');
 
 /**
  * POST /api/upload/:postName - 上传图片到文章资源文件夹
@@ -73,8 +74,39 @@ router.post('/:postName', async (req, res) => {
       base64Data = image.split(',')[1];
     }
     
-    // 写入文件
-    await fs.writeFile(filePath, Buffer.from(base64Data, 'base64'));
+    const imageBuffer = Buffer.from(base64Data, 'base64');
+    
+    // 使用 sharp 优化图片
+    try {
+      let sharpInstance = sharp(imageBuffer);
+      
+      // 获取图片信息
+      const metadata = await sharpInstance.metadata();
+      
+      // 如果图片过大，进行压缩
+      if (metadata.width > 2000 || metadata.height > 2000) {
+        sharpInstance = sharpInstance.resize(2000, 2000, {
+          fit: 'inside',
+          withoutEnlargement: true
+        });
+      }
+      
+      // 根据格式优化
+      if (ext === '.jpg' || ext === '.jpeg') {
+        sharpInstance = sharpInstance.jpeg({ quality: 85, progressive: true });
+      } else if (ext === '.png') {
+        sharpInstance = sharpInstance.png({ compressionLevel: 9, progressive: true });
+      } else if (ext === '.webp') {
+        sharpInstance = sharpInstance.webp({ quality: 85 });
+      }
+      
+      const optimizedBuffer = await sharpInstance.toBuffer();
+      await fs.writeFile(filePath, optimizedBuffer);
+    } catch (sharpError) {
+      // 如果 sharp 处理失败，使用原始数据
+      console.warn('Image optimization failed, using original:', sharpError.message);
+      await fs.writeFile(filePath, imageBuffer);
+    }
     
     // 生成 Markdown 引用格式（用于 Hexo 博客）
     // 使用 asset_img 标签，Hexo 会自动处理文章资源文件夹
