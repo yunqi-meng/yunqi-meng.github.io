@@ -67,6 +67,24 @@
             background: #389e0d;
         }
         
+        .btn-danger {
+            background: #ff4d4f;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #cf1322;
+        }
+        
+        .btn-secondary {
+            background: #d9d9d9;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #bfbfbf;
+        }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -129,10 +147,62 @@
             font-size: 13px;
         }
         
-        .empty-state {
+        .editor-container {
+            display: none;
+        }
+        
+        .editor-container.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+        }
+        
+        textarea.form-control {
+            min-height: 400px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            resize: vertical;
+        }
+        
+        .upload-area {
+            border: 2px dashed #d9d9d9;
+            border-radius: 8px;
+            padding: 40px;
             text-align: center;
-            padding: 60px 20px;
-            color: #999;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .upload-area:hover {
+            border-color: #6366f1;
+            background: #f6f7ff;
+        }
+        
+        .upload-area.dragover {
+            border-color: #6366f1;
+            background: #f6f7ff;
         }
         
         .modal {
@@ -183,35 +253,39 @@
             color: #333;
         }
         
-        .form-group {
+        .deploy-section {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .status-draft {
+            background: #fff7e6;
+            color: #fa8c16;
+        }
+        
+        .status-published {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
             margin-bottom: 16px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d9d9d9;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
-        }
-        
-        textarea.form-control {
-            min-height: 400px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            resize: vertical;
+            opacity: 0.3;
         }
         
         .toast {
@@ -253,6 +327,33 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #6366f1;
+            border-bottom-color: #6366f1;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -269,13 +370,45 @@
     </div>
     
     <div class="container">
-        <div class="card">
-            <div class="card-title">文章管理</div>
-            <ul class="post-list" id="postList">
-                <li class="empty-state">
-                    <div>加载中...</div>
-                </li>
-            </ul>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('posts')">文章管理</div>
+            <div class="tab" onclick="switchTab('pages')">页面管理</div>
+            <div class="tab" onclick="switchTab('upload')">图片上传</div>
+        </div>
+        
+        <div id="posts-tab" class="tab-content active">
+            <div class="card">
+                <div class="card-title">文章列表</div>
+                <ul class="post-list" id="postList">
+                    <li class="empty-state">
+                        <div>加载中...</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="pages-tab" class="tab-content">
+            <div class="card">
+                <div class="card-title">页面列表</div>
+                <ul class="post-list" id="pageList">
+                    <li class="empty-state">
+                        <div>加载中...</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="upload-tab" class="tab-content">
+            <div class="card">
+                <div class="card-title">图片上传</div>
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                    <div style="font-size: 48px; margin-bottom: 16px;">📁</div>
+                    <div style="font-size: 16px; color: #666; margin-bottom: 8px;">点击或拖拽图片到此处上传</div>
+                    <div style="font-size: 13px; color: #999;">支持 JPG、PNG、GIF 格式</div>
+                </div>
+                <input type="file" id="fileInput" style="display: none" accept="image/*" multiple onchange="handleFiles(this.files)">
+                <div id="uploadResult" style="margin-top: 16px;"></div>
+            </div>
         </div>
     </div>
     
@@ -288,6 +421,11 @@
             <div class="form-group">
                 <input type="text" class="form-control" id="postTitle" placeholder="文章标题">
             </div>
+            <div class="form-group">
+                <label>封面图片</label>
+                <input type="text" class="form-control" id="postCover" placeholder="输入封面图片路径或点击右侧按钮选择">
+                <button class="btn btn-sm" style="margin-top: 8px;" onclick="showImageSelector()">选择图片</button>
+            </div>
             <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
                 <textarea class="form-control" id="postContent" placeholder="文章内容（支持 Markdown）" style="flex: 1;"></textarea>
             </div>
@@ -297,6 +435,8 @@
                 </div>
                 <div style="display: flex; gap: 12px;">
                     <button class="btn" onclick="closeEditor()">取消</button>
+                    <button class="btn btn-danger" onclick="deletePost()">删除</button>
+                    <button class="btn" onclick="togglePublish()" id="publishBtn">发布</button>
                     <button class="btn btn-success" onclick="savePost()">保存</button>
                 </div>
             </div>
@@ -322,39 +462,62 @@
     
     <div id="toast" class="toast"></div>
     
+    <div id="imageSelectorModal" class="modal">
+        <div class="modal-content" style="width: 90%; max-width: 800px; height: 80vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h2>选择封面图片</h2>
+                <button class="close-btn" onclick="closeImageSelector()">&times;</button>
+            </div>
+            <div style="flex: 1; overflow-y: auto; padding: 16px; border: 1px solid #f0f0f0; border-radius: 8px; margin-bottom: 16px;">
+                <div id="imageList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px;">
+                    <div style="text-align: center; padding: 40px; color: #999;">加载图片中...</div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                <button class="btn" onclick="closeImageSelector()">取消</button>
+            </div>
+        </div>
+    </div>
+    
     <script>
         const API_BASE = 'http://localhost:4007/api/admin';
         let currentPost = null;
         let posts = [];
+        let pages = [];
         
-        // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             loadPosts();
+            loadPages();
+            initUpload();
         });
         
-        // 加载文章列表
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+        }
+        
         async function loadPosts() {
             try {
-                console.log('加载文章列表...');
                 const res = await fetch(API_BASE + '/posts/list');
-                console.log('API 响应状态:', res.status);
-                
-                if (!res.ok) {
-                    throw new Error('API 响应失败: ' + res.status);
-                }
-                
                 posts = await res.json();
-                console.log('文章数据:', posts);
                 renderPostList();
             } catch (err) {
-                console.error('加载文章失败:', err);
-                showToast('加载文章失败: ' + err.message, 'error');
-                const list = document.getElementById('postList');
-                list.innerHTML = '<li class="empty-state"><div>加载失败，请刷新页面重试</div></li>';
+                showToast('加载文章失败', 'error');
             }
         }
         
-        // 渲染文章列表
+        async function loadPages() {
+            try {
+                const res = await fetch(API_BASE + '/pages/list');
+                pages = await res.json();
+                renderPageList();
+            } catch (err) {
+                showToast('加载页面失败', 'error');
+            }
+        }
+        
         function renderPostList() {
             const list = document.getElementById('postList');
             if (posts.length === 0) {
@@ -362,77 +525,161 @@
                 return;
             }
             
-            list.innerHTML = posts.map(post => `
+            list.innerHTML = posts.filter(p => !p.isDiscarded).map(post => `
                 <li class="post-item">
                     <div class="post-info">
-                        <h3>${post.title}</h3>
+                        <h3>${escapeHtml(post.title)}</h3>
                         <div class="meta">
+                            <span class="status ${post.isDraft ? 'status-draft' : 'status-published'}">${post.isDraft ? '草稿' : '已发布'}</span>
                             <span>${new Date(post.date).toLocaleDateString('zh-CN')}</span>
                         </div>
                     </div>
                     <div class="post-actions">
                         <button class="btn btn-sm" onclick="editPost('${post._id}')">编辑</button>
+                        <a class="btn btn-sm" href="${post.path}" target="_blank">预览</a>
                     </div>
                 </li>
             `).join('');
         }
         
-        // 编辑文章
+        function renderPageList() {
+            const list = document.getElementById('pageList');
+            if (pages.length === 0) {
+                list.innerHTML = '<li class="empty-state"><div>暂无页面</div></li>';
+                return;
+            }
+            
+            list.innerHTML = pages.map(page => `
+                <li class="post-item">
+                    <div class="post-info">
+                        <h3>${escapeHtml(page.title)}</h3>
+                        <div class="meta">
+                            <span>${new Date(page.date).toLocaleDateString('zh-CN')}</span>
+                        </div>
+                    </div>
+                    <div class="post-actions">
+                        <button class="btn btn-sm" onclick="editPage('${page._id}')">编辑</button>
+                        <a class="btn btn-sm" href="${page.path}" target="_blank">预览</a>
+                    </div>
+                </li>
+            `).join('');
+        }
+        
         async function editPost(id) {
             currentPost = posts.find(p => p._id === id);
             if (!currentPost) return;
             
             document.getElementById('postTitle').value = currentPost.title;
             document.getElementById('postContent').value = currentPost.raw || currentPost.content || '';
+            document.getElementById('postCover').value = currentPost.cover || '';
+            document.getElementById('postStatus').innerHTML = currentPost.isDraft ? 
+                '<span class="status status-draft">草稿</span>' : 
+                '<span class="status status-published">已发布</span>';
+            document.getElementById('publishBtn').textContent = currentPost.isDraft ? '发布' : '转为草稿';
             document.getElementById('editorModal').classList.add('active');
         }
         
-        // 关闭编辑器
+        async function editPage(id) {
+            const page = pages.find(p => p._id === id);
+            if (!page) return;
+            
+            currentPost = page;
+            currentPost.isPage = true;
+            document.getElementById('postTitle').value = page.title;
+            document.getElementById('postContent').value = page.raw || page.content || '';
+            document.getElementById('postStatus').innerHTML = '<span class="status status-published">页面</span>';
+            document.getElementById('publishBtn').style.display = 'none';
+            document.getElementById('editorModal').classList.add('active');
+        }
+        
         function closeEditor() {
             document.getElementById('editorModal').classList.remove('active');
             currentPost = null;
         }
         
-        // 保存文章
         async function savePost() {
             if (!currentPost) return;
             
             const title = document.getElementById('postTitle').value;
             const content = document.getElementById('postContent').value;
+            const cover = document.getElementById('postCover').value;
             
             try {
-                const endpoint = 'posts';
+                const endpoint = currentPost.isPage ? 'pages' : 'posts';
                 const res = await fetch(API_BASE + `/${endpoint}/${currentPost._id}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, content })
+                    body: JSON.stringify({ title, content, cover })
                 });
                 
                 if (res.ok) {
                     showToast('保存成功');
                     closeEditor();
-                    loadPosts();
+                    if (currentPost.isPage) {
+                        loadPages();
+                    } else {
+                        loadPosts();
+                    }
                 } else {
                     showToast('保存失败', 'error');
                 }
             } catch (err) {
-                showToast('保存失败: ' + err.message, 'error');
+                showToast('保存失败', 'error');
             }
         }
         
-        // 显示新建文章弹窗
+        async function deletePost() {
+            if (!currentPost || !confirm('确定要删除这篇文章吗？')) return;
+            
+            try {
+                const res = await fetch(API_BASE + `/posts/${currentPost._id}/remove`, {
+                    method: 'POST'
+                });
+                
+                if (res.ok) {
+                    showToast('删除成功');
+                    closeEditor();
+                    loadPosts();
+                } else {
+                    showToast('删除失败', 'error');
+                }
+            } catch (err) {
+                showToast('删除失败', 'error');
+            }
+        }
+        
+        async function togglePublish() {
+            if (!currentPost) return;
+            
+            const action = currentPost.isDraft ? 'publish' : 'unpublish';
+            
+            try {
+                const res = await fetch(API_BASE + `/posts/${currentPost._id}/${action}`, {
+                    method: 'POST'
+                });
+                
+                if (res.ok) {
+                    showToast(currentPost.isDraft ? '发布成功' : '已转为草稿');
+                    closeEditor();
+                    loadPosts();
+                } else {
+                    showToast('操作失败', 'error');
+                }
+            } catch (err) {
+                showToast('操作失败', 'error');
+            }
+        }
+        
         function showNewPostModal() {
             document.getElementById('newPostModal').classList.add('active');
             document.getElementById('newPostTitle').focus();
         }
         
-        // 关闭新建文章弹窗
         function closeNewPostModal() {
             document.getElementById('newPostModal').classList.remove('active');
             document.getElementById('newPostTitle').value = '';
         }
         
-        // 创建文章
         async function createPost() {
             const title = document.getElementById('newPostTitle').value;
             if (!title) {
@@ -455,11 +702,10 @@
                     showToast('创建失败', 'error');
                 }
             } catch (err) {
-                showToast('创建失败: ' + err.message, 'error');
+                showToast('创建失败', 'error');
             }
         }
         
-        // 部署网站
         async function deploy() {
             if (!confirm('确定要部署网站到 GitHub Pages 吗？')) return;
             
@@ -477,17 +723,167 @@
                     showToast('部署失败', 'error');
                 }
             } catch (err) {
-                showToast('部署失败: ' + err.message, 'error');
+                showToast('部署失败', 'error');
             }
         }
         
-        // 显示提示
+        function initUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+        }
+        
+        async function handleFiles(files) {
+            const resultDiv = document.getElementById('uploadResult');
+            resultDiv.innerHTML = '<div style="text-align: center;"><div class="loading"></div><div style="margin-top: 8px;">上传中...</div></div>';
+            
+            const uploaded = [];
+            
+            for (const file of files) {
+                if (!file.type.startsWith('image/')) continue;
+                
+                const reader = new FileReader();
+                await new Promise((resolve) => {
+                    reader.onload = async (e) => {
+                        const data = e.target.result;
+                        try {
+                            const res = await fetch(API_BASE + '/images/upload', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    data: data,
+                                    filename: file.name
+                                })
+                            });
+                            
+                            if (res.ok) {
+                                const result = await res.json();
+                                uploaded.push(result.path || result);
+                            }
+                        } catch (err) {
+                            console.error('Upload failed:', err);
+                        }
+                        resolve();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            
+            if (uploaded.length > 0) {
+                resultDiv.innerHTML = `
+                    <div style="background: #f6ffed; border: 1px solid #b7eb8f; border-radius: 8px; padding: 16px;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">上传成功！</div>
+                        <div style="font-size: 13px; color: #666; margin-bottom: 12px;">点击图片路径复制：</div>
+                        ${uploaded.map(path => `
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 8px; background: white; border-radius: 4px; cursor: pointer;" onclick="copyToClipboard('${path}')">
+                                <input type="text" value="${path}" readonly style="flex: 1; border: none; background: transparent; font-family: monospace; font-size: 13px;">
+                                <button class="btn btn-sm">复制</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                showToast(`成功上传 ${uploaded.length} 张图片`);
+            } else {
+                resultDiv.innerHTML = '<div style="color: #ff4d4f; text-align: center;">上传失败</div>';
+            }
+        }
+        
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('已复制到剪贴板');
+            });
+        }
+        
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.className = 'toast toast-' + type;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        document.getElementById('newPostTitle').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') createPost();
+        });
+        
+        // 图片选择器功能
+        function showImageSelector() {
+            if (!currentPost) return;
+            
+            document.getElementById('imageSelectorModal').classList.add('active');
+            loadImages();
+        }
+        
+        function closeImageSelector() {
+            document.getElementById('imageSelectorModal').classList.remove('active');
+        }
+        
+        async function loadImages() {
+            if (!currentPost) return;
+            
+            const imageList = document.getElementById('imageList');
+            imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">加载图片中...</div>';
+            
+            try {
+                // 对于文章，获取对应资源文件夹的图片
+                if (!currentPost.isPage) {
+                    const postName = currentPost._id.replace('.md', '');
+                    const res = await fetch(API_BASE + `/upload/${postName}`);
+                    
+                    if (res.ok) {
+                        const result = await res.json();
+                        if (result.success) {
+                            if (result.images.length === 0) {
+                                imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">暂无图片，请先上传图片</div>';
+                            } else {
+                                imageList.innerHTML = result.images.map(image => `
+                                    <div style="border: 1px solid #f0f0f0; border-radius: 8px; padding: 8px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative;">
+                                        <img src="http://localhost:4007${image.path}" style="width: 100%; height: 80px; object-fit: cover; border-radius: 4px; margin-bottom: 8px;">
+                                        <div style="font-size: 12px; color: #666; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${image.filename}</div>
+                                        <button class="btn btn-sm" style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer;" onclick="setAsCover('http://localhost:4007${image.path}')">设为封面</button>
+                                    </div>
+                                `).join('');
+                            }
+                        } else {
+                            imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff4d4f;">加载图片失败</div>';
+                        }
+                    } else {
+                        imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff4d4f;">加载图片失败</div>';
+                    }
+                } else {
+                    imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #999;">页面不支持设置封面</div>';
+                }
+            } catch (err) {
+                imageList.innerHTML = '<div style="text-align: center; padding: 40px; color: #ff4d4f;">加载图片失败</div>';
+            }
+        }
+        
+        function setAsCover(imagePath) {
+            const coverInput = document.getElementById('postCover');
+            if (coverInput) {
+                coverInput.value = imagePath;
+                showToast('封面设置成功');
+                closeImageSelector();
+            }
         }
     </script>
 </body>
