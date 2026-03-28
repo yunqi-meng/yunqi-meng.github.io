@@ -1,13 +1,13 @@
 const fetch = require('node-fetch');
 
-const API_BASE = 'http://localhost:4007/api/admin';
+const API_BASE = 'http://localhost:4007/api';
 
 async function testAPI() {
     console.log('测试API端点...');
     
     try {
         // 测试文章列表API
-        const postsRes = await fetch(API_BASE + '/posts/list');
+        const postsRes = await fetch(API_BASE + '/posts');
         console.log('文章列表API状态:', postsRes.status);
         
         if (postsRes.ok) {

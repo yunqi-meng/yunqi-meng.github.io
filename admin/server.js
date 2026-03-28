@@ -24,7 +24,7 @@ module.exports = { ROOT_DIR, POSTS_DIR };
 // 中间件
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(ROOT_DIR, 'source', 'admin')));
 
 // 静态文件服务 - 文章资源文件夹（图片等）
 // 将 /posts-assets 映射到 source/_posts 目录
@@ -32,7 +32,7 @@ app.use('/posts-assets', express.static(POSTS_DIR));
 
 // CORS - 仅允许本地访问
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4001');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4007');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
