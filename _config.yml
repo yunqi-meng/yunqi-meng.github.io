@@ -91,15 +91,6 @@ theme: butterfly
 #   branch: gh-pages
 #   message: "Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }}"
 
-# Admin
-admin:
-  username: admin
-  password_hash: $2a$10$6pWX3IoOf63QDZyFrs279OcwifK6JvLk12IhBfX0VCVzwOTUBFCnO
-  secret: hexoadminsecretkey123456
-  deployCommand: ''
-  port: 4000
-  expire: 60
-
 # Search
 search:
   path: search.xml

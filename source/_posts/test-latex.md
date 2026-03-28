@@ -4,7 +4,8 @@ date: 2026-03-24 10:00:00
 tags:
 categories:
 published: true
-updated: 2026-03-24T13:25:11.480Z
+updated: 2026-03-28T03:36:28.094Z
+cover: http://localhost:4007/posts-assets/test-latex/30a65fdd65c5bda43a0bd197c50a60be.jpg
 ---
 {% asset_img 30a65fdd65c5bda43a0bd197c50a60be.jpg %}
 

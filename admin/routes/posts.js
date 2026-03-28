@@ -60,7 +60,7 @@ router.get('/:fileName', async (req, res) => {
  */
 router.post('/', async (req, res) => {
   try {
-    const { title, content, categories = [], tags = [], published = true } = req.body;
+    const { title, cover, content, categories = [], tags = [], published = true } = req.body;
     
     if (!title) {
       return res.status(400).json({ success: false, error: 'Title is required' });
@@ -87,6 +87,7 @@ router.post('/', async (req, res) => {
     const frontMatter = {
       title,
       date: now.toISOString(),
+      cover: cover || '/images/default.jpg',
       categories: Array.isArray(categories) ? categories : [categories].filter(Boolean),
       tags: Array.isArray(tags) ? tags : [tags].filter(Boolean),
       published
@@ -111,7 +112,7 @@ router.post('/', async (req, res) => {
 router.put('/:fileName', async (req, res) => {
   try {
     const { fileName } = req.params;
-    const { title, content, categories, tags, published } = req.body;
+    const { title, cover, content, categories, tags, published } = req.body;
     
     const filePath = path.join(POSTS_DIR, fileName);
     
@@ -128,6 +129,7 @@ router.put('/:fileName', async (req, res) => {
     const frontMatter = {
       ...existingFrontMatter,
       ...(title && { title }),
+      ...(cover !== undefined && { cover }),
       ...(categories !== undefined && { categories: Array.isArray(categories) ? categories : [categories].filter(Boolean) }),
       ...(tags !== undefined && { tags: Array.isArray(tags) ? tags : [tags].filter(Boolean) }),
       ...(published !== undefined && { published }),

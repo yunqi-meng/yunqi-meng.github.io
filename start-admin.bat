@@ -1,47 +1,28 @@
 @echo off
-title Hexo Admin Server
+title Hexo Admin
 color 0A
 
 echo ==========================================
-echo    Hexo Admin Server
+echo    Hexo Admin - Custom Admin Panel
 echo ==========================================
 echo.
 
 cd /d "%~dp0"
 
-echo [1/3] Cleaning cache...
-call hexo clean
-if errorlevel 1 (
-    echo [ERROR] Clean failed
-    pause
-    exit /b 1
-)
-echo [1/3] Done
-echo.
-
-echo [2/3] Generating static files...
-call hexo generate
-if errorlevel 1 (
-    echo [ERROR] Generate failed
-    pause
-    exit /b 1
-)
-echo [2/3] Done
-echo.
-
-echo [3/3] Starting server...
+echo Starting custom admin backend...
 echo.
 echo ==========================================
-echo    Server started!
-echo    URL: http://localhost:4000/admin
-echo    Username: admin
+echo    Admin Server Started!
+echo.
+echo    Admin Panel: http://localhost:4007
+echo    API Endpoint: http://localhost:4007/api
+echo.
 echo    Press Ctrl+C to stop
 echo ==========================================
 echo.
 
 timeout /t 2 /nobreak >nul
-start http://localhost:4000/admin
-
-call hexo server
+start http://localhost:4007
+node admin/server.js
 
 pause
