@@ -66,42 +66,6 @@
         .btn-success:hover {
             background: #389e0d;
         }
-
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background: #e0e0e0;
-        }
-
-        .btn-danger {
-            background: #ff4d4f;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #cf1322;
-        }
-
-        .badge {
-            display: inline-block;
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-right: 6px;
-        }
-
-        .badge-draft {
-            background: #fff7e6;
-            color: #d46b08;
-        }
-
-        .badge-published {
-            background: #f6ffed;
-            color: #389e0d;
-        }
         
         .container {
             max-width: 1200px;
@@ -313,22 +277,6 @@
                 </li>
             </ul>
         </div>
-
-        <div class="card">
-            <div class="card-title">独立页面</div>
-            <ul class="post-list" id="pageList">
-                <li class="empty-state"><div>加载中...</div></li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <div class="card-title">站点配置</div>
-            <p style="color:#666;font-size:14px;margin-bottom:12px;">编辑 Hexo 主配置与主题配置（保存前会自动备份）</p>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button type="button" class="btn btn-secondary" id="btnConfigSite">编辑 _config.yml</button>
-                <button type="button" class="btn btn-secondary" id="btnConfigTheme">编辑主题配置</button>
-            </div>
-        </div>
     </div>
     
     <div id="editorModal" class="modal">
@@ -339,10 +287,6 @@
             </div>
             <div class="form-group">
                 <input type="text" class="form-control" id="postTitle" placeholder="文章标题">
-            </div>
-            <div class="form-group">
-                <label style="font-size:13px;color:#666;">插入图片</label>
-                <input type="file" id="postImageInput" accept="image/*" class="form-control" style="padding:8px;">
             </div>
             <div class="form-group" style="flex: 1; display: flex; flex-direction: column;">
                 <textarea class="form-control" id="postContent" placeholder="文章内容（支持 Markdown）" style="flex: 1;"></textarea>
@@ -376,403 +320,168 @@
         </div>
     </div>
     
-    <div id="configModal" class="modal">
-        <div class="modal-content" style="width: 95%; max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
-            <div class="modal-header">
-                <h2 id="configModalTitle">编辑配置</h2>
-                <button type="button" class="close-btn" id="configModalClose">&times;</button>
-            </div>
-            <textarea class="form-control" id="configContent" style="min-height: 60vh; font-family: Consolas, monospace;"></textarea>
-            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px;">
-                <button type="button" class="btn" id="configCancel">取消</button>
-                <button type="button" class="btn btn-success" id="configSave">保存</button>
-            </div>
-        </div>
-    </div>
-
     <div id="toast" class="toast"></div>
-
+    
     <script>
-        const origin = window.location.origin;
-        const API_BASE = origin + '/api/admin';
-        const API_UPLOAD = origin + '/api/upload';
-        const API_CONFIG = origin + '/api/config';
-
+        const API_BASE = 'http://localhost:4007/api/admin';
         let currentPost = null;
-        let editorMode = 'post';
         let posts = [];
-        let pages = [];
-        let configEditType = 'site';
-
-        function escapeHtml(s) {
-            if (s == null) return '';
-            const div = document.createElement('div');
-            div.textContent = s;
-            return div.innerHTML;
-        }
-
+        
+        // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             loadPosts();
-            loadPages();
-            document.getElementById('postList').addEventListener('click', onPostListClick);
-            document.getElementById('pageList').addEventListener('click', onPageListClick);
-            document.getElementById('postImageInput').addEventListener('change', onPostImageSelected);
-            document.getElementById('btnConfigSite').addEventListener('click', () => openConfigEditor('site'));
-            document.getElementById('btnConfigTheme').addEventListener('click', () => openConfigEditor('theme'));
-            document.getElementById('configModalClose').addEventListener('click', closeConfigEditor);
-            document.getElementById('configCancel').addEventListener('click', closeConfigEditor);
-            document.getElementById('configSave').addEventListener('click', saveConfig);
         });
-
+        
+        // 加载文章列表
         async function loadPosts() {
             try {
+                console.log('加载文章列表...');
                 const res = await fetch(API_BASE + '/posts/list');
-                if (!res.ok) throw new Error('HTTP ' + res.status);
+                console.log('API 响应状态:', res.status);
+                
+                if (!res.ok) {
+                    throw new Error('API 响应失败: ' + res.status);
+                }
+                
                 posts = await res.json();
+                console.log('文章数据:', posts);
                 renderPostList();
             } catch (err) {
-                console.error(err);
+                console.error('加载文章失败:', err);
                 showToast('加载文章失败: ' + err.message, 'error');
-                document.getElementById('postList').innerHTML =
-                    '<li class="empty-state"><div>加载失败，请确认已运行 npm run admin 并刷新</div></li>';
+                const list = document.getElementById('postList');
+                list.innerHTML = '<li class="empty-state"><div>加载失败，请刷新页面重试</div></li>';
             }
         }
-
-        async function loadPages() {
-            try {
-                const res = await fetch(API_BASE + '/pages/list');
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                pages = await res.json();
-                renderPageList();
-            } catch (err) {
-                console.error(err);
-                document.getElementById('pageList').innerHTML =
-                    '<li class="empty-state"><div>页面列表加载失败</div></li>';
-            }
-        }
-
+        
+        // 渲染文章列表
         function renderPostList() {
             const list = document.getElementById('postList');
             if (posts.length === 0) {
                 list.innerHTML = '<li class="empty-state"><div>暂无文章，点击右上角新建</div></li>';
                 return;
             }
-            list.innerHTML = posts.map(post => {
-                const draft = post.isDraft === true;
-                const dateStr = post.date ? new Date(post.date).toLocaleDateString('zh-CN') : '';
-                const idAttr = encodeURIComponent(post._id);
-                return `<li class="post-item" data-post-id="${idAttr}">
+            
+            list.innerHTML = posts.map(post => `
+                <li class="post-item">
                     <div class="post-info">
-                        <h3>${draft ? '<span class="badge badge-draft">草稿</span>' : '<span class="badge badge-published">已发布</span>'}${escapeHtml(post.title)}</h3>
-                        <div class="meta"><span>${escapeHtml(dateStr)}</span></div>
+                        <h3>${post.title}</h3>
+                        <div class="meta">
+                            <span>${new Date(post.date).toLocaleDateString('zh-CN')}</span>
+                        </div>
                     </div>
                     <div class="post-actions">
-                        <button type="button" class="btn btn-sm btn-secondary" data-action="edit">编辑</button>
-                        ${draft
-                    ? `<button type="button" class="btn btn-sm btn-success" data-action="publish">发布</button>`
-                    : `<button type="button" class="btn btn-sm btn-secondary" data-action="unpublish">转为草稿</button>`}
-                        <button type="button" class="btn btn-sm btn-danger" data-action="delete">删除</button>
+                        <button class="btn btn-sm" onclick="editPost('${post._id}')">编辑</button>
                     </div>
-                </li>`;
-            }).join('');
+                </li>
+            `).join('');
         }
-
-        function renderPageList() {
-            const list = document.getElementById('pageList');
-            if (pages.length === 0) {
-                list.innerHTML = '<li class="empty-state"><div>暂无独立页面（source 根目录 .md）</div></li>';
-                return;
-            }
-            list.innerHTML = pages.map(page => {
-                const idAttr = encodeURIComponent(page._id);
-                const dateStr = page.date ? new Date(page.date).toLocaleDateString('zh-CN') : '';
-                return `<li class="post-item" data-page-id="${idAttr}">
-                    <div class="post-info">
-                        <h3>${escapeHtml(page.title)}</h3>
-                        <div class="meta">${escapeHtml(page._id)} · ${escapeHtml(dateStr)}</div>
-                    </div>
-                    <div class="post-actions">
-                        <button type="button" class="btn btn-sm btn-secondary" data-action="edit-page">编辑</button>
-                    </div>
-                </li>`;
-            }).join('');
-        }
-
-        function onPostListClick(e) {
-            const btn = e.target.closest('[data-action]');
-            if (!btn) return;
-            const li = btn.closest('[data-post-id]');
-            if (!li) return;
-            const id = decodeURIComponent(li.getAttribute('data-post-id'));
-            const action = btn.getAttribute('data-action');
-            if (action === 'edit') editPost(id);
-            else if (action === 'publish') publishPost(id);
-            else if (action === 'unpublish') unpublishPost(id);
-            else if (action === 'delete') deletePost(id);
-        }
-
-        function onPageListClick(e) {
-            const btn = e.target.closest('[data-action]');
-            if (!btn || btn.getAttribute('data-action') !== 'edit-page') return;
-            const li = btn.closest('[data-page-id]');
-            if (!li) return;
-            editPage(decodeURIComponent(li.getAttribute('data-page-id')));
-        }
-
-        function editPost(id) {
+        
+        // 编辑文章
+        async function editPost(id) {
             currentPost = posts.find(p => p._id === id);
             if (!currentPost) return;
-            editorMode = 'post';
-            document.querySelector('#editorModal .modal-header h2').textContent = '编辑文章';
+            
             document.getElementById('postTitle').value = currentPost.title;
             document.getElementById('postContent').value = currentPost.raw || currentPost.content || '';
-            document.getElementById('postImageInput').value = '';
-            updatePostStatusLine();
             document.getElementById('editorModal').classList.add('active');
         }
-
-        function editPage(id) {
-            currentPost = pages.find(p => p._id === id);
-            if (!currentPost) return;
-            editorMode = 'page';
-            document.querySelector('#editorModal .modal-header h2').textContent = '编辑页面';
-            document.getElementById('postTitle').value = currentPost.title;
-            document.getElementById('postContent').value = currentPost.raw || currentPost.content || '';
-            document.getElementById('postImageInput').value = '';
-            document.getElementById('postStatus').textContent = '独立页面 · 图片将上传到站点 images 目录';
-            document.getElementById('editorModal').classList.add('active');
-        }
-
-        function updatePostStatusLine() {
-            const el = document.getElementById('postStatus');
-            if (editorMode !== 'post' || !currentPost) {
-                return;
-            }
-            const draft = currentPost.isDraft === true;
-            el.textContent = draft ? '当前为草稿' : '已发布';
-        }
-
+        
+        // 关闭编辑器
         function closeEditor() {
             document.getElementById('editorModal').classList.remove('active');
             currentPost = null;
-            editorMode = 'post';
-            document.getElementById('postStatus').textContent = '';
         }
-
+        
+        // 保存文章
         async function savePost() {
             if (!currentPost) return;
+            
             const title = document.getElementById('postTitle').value;
             const content = document.getElementById('postContent').value;
-            const segment = editorMode === 'page' ? 'pages' : 'posts';
+            
             try {
-                const res = await fetch(API_BASE + '/' + segment + '/' + encodeURIComponent(currentPost._id), {
+                const endpoint = 'posts';
+                const res = await fetch(API_BASE + `/${endpoint}/${currentPost._id}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ title, content })
                 });
+                
                 if (res.ok) {
                     showToast('保存成功');
                     closeEditor();
                     loadPosts();
-                    loadPages();
                 } else {
-                    const j = await res.json().catch(() => ({}));
-                    showToast('保存失败: ' + (j.error || res.status), 'error');
+                    showToast('保存失败', 'error');
                 }
             } catch (err) {
                 showToast('保存失败: ' + err.message, 'error');
             }
         }
-
-        async function publishPost(id) {
-            try {
-                const res = await fetch(API_BASE + '/posts/' + encodeURIComponent(id) + '/publish', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: '{}'
-                });
-                if (res.ok) {
-                    showToast('已发布');
-                    loadPosts();
-                } else showToast('发布失败', 'error');
-            } catch (err) {
-                showToast('发布失败: ' + err.message, 'error');
-            }
-        }
-
-        async function unpublishPost(id) {
-            try {
-                const res = await fetch(API_BASE + '/posts/' + encodeURIComponent(id) + '/unpublish', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: '{}'
-                });
-                if (res.ok) {
-                    showToast('已设为草稿');
-                    loadPosts();
-                } else showToast('操作失败', 'error');
-            } catch (err) {
-                showToast('操作失败: ' + err.message, 'error');
-            }
-        }
-
-        async function deletePost(id) {
-            if (!confirm('确定删除该文章？将同时删除同名资源文件夹。')) return;
-            try {
-                const res = await fetch(API_BASE + '/posts/' + encodeURIComponent(id) + '/remove', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: '{}'
-                });
-                if (res.ok) {
-                    showToast('已删除');
-                    loadPosts();
-                } else showToast('删除失败', 'error');
-            } catch (err) {
-                showToast('删除失败: ' + err.message, 'error');
-            }
-        }
-
-        async function onPostImageSelected(e) {
-            const file = e.target.files && e.target.files[0];
-            if (!file || !currentPost) return;
-            const ta = document.getElementById('postContent');
-            const reader = new FileReader();
-            reader.onload = async () => {
-                const dataUrl = reader.result;
-                try {
-                    if (editorMode === 'post') {
-                        const slug = currentPost._id.replace(/\.md$/i, '');
-                        const res = await fetch(API_UPLOAD + '/' + encodeURIComponent(slug), {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                image: dataUrl,
-                                filename: file.name || 'image.png'
-                            })
-                        });
-                        const j = await res.json();
-                        if (!res.ok || !j.success) throw new Error(j.error || '上传失败');
-                        const insert = (j.markdown || '') + '\n';
-                        ta.value += (ta.value && !ta.value.endsWith('\n') ? '\n' : '') + insert;
-                        showToast('图片已插入（文章资源）');
-                    } else {
-                        const res = await fetch(API_BASE + '/images/upload', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                data: dataUrl,
-                                filename: file.name || 'image.png'
-                            })
-                        });
-                        const j = await res.json();
-                        if (!res.ok || !j.path) throw new Error(j.error || '上传失败');
-                        const md = '![](' + j.path + ')\n';
-                        ta.value += (ta.value && !ta.value.endsWith('\n') ? '\n' : '') + md;
-                        showToast('图片已插入（source/images）');
-                    }
-                } catch (err) {
-                    showToast(err.message || '上传失败', 'error');
-                }
-                e.target.value = '';
-            };
-            reader.readAsDataURL(file);
-        }
-
+        
+        // 显示新建文章弹窗
         function showNewPostModal() {
             document.getElementById('newPostModal').classList.add('active');
             document.getElementById('newPostTitle').focus();
         }
-
+        
+        // 关闭新建文章弹窗
         function closeNewPostModal() {
             document.getElementById('newPostModal').classList.remove('active');
             document.getElementById('newPostTitle').value = '';
         }
-
+        
+        // 创建文章
         async function createPost() {
-            const title = document.getElementById('newPostTitle').value.trim();
+            const title = document.getElementById('newPostTitle').value;
             if (!title) {
                 showToast('请输入文章标题', 'error');
                 return;
             }
+            
             try {
                 const res = await fetch(API_BASE + '/posts/new', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ title })
                 });
+                
                 if (res.ok) {
                     showToast('创建成功');
                     closeNewPostModal();
                     loadPosts();
                 } else {
-                    const j = await res.json().catch(() => ({}));
-                    showToast('创建失败: ' + (j.error || res.status), 'error');
+                    showToast('创建失败', 'error');
                 }
             } catch (err) {
                 showToast('创建失败: ' + err.message, 'error');
             }
         }
-
+        
+        // 部署网站
         async function deploy() {
-            if (!confirm('确定要执行 git 提交并推送到 origin main 吗？')) return;
+            if (!confirm('确定要部署网站到 GitHub Pages 吗？')) return;
+            
             try {
                 showToast('正在部署...');
                 const res = await fetch(API_BASE + '/deploy', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({})
+                    body: JSON.stringify({ message: 'Update from admin' })
                 });
+                
                 if (res.ok) {
-                    showToast('部署流程已执行（请检查终端与远程仓库）');
+                    showToast('部署成功');
                 } else {
-                    const j = await res.json().catch(() => ({}));
-                    showToast('部署失败: ' + (j.error || res.status), 'error');
+                    showToast('部署失败', 'error');
                 }
             } catch (err) {
                 showToast('部署失败: ' + err.message, 'error');
             }
         }
-
-        async function openConfigEditor(type) {
-            configEditType = type;
-            const title = type === 'site' ? '站点 _config.yml' : '主题 butterfly 配置';
-            document.getElementById('configModalTitle').textContent = '编辑 · ' + title;
-            try {
-                const res = await fetch(API_CONFIG + '/' + encodeURIComponent(type));
-                const j = await res.json();
-                if (!res.ok || !j.success) throw new Error(j.error || '读取失败');
-                document.getElementById('configContent').value = j.content || '';
-                document.getElementById('configModal').classList.add('active');
-            } catch (err) {
-                showToast('读取配置失败: ' + err.message, 'error');
-            }
-        }
-
-        function closeConfigEditor() {
-            document.getElementById('configModal').classList.remove('active');
-        }
-
-        async function saveConfig() {
-            const content = document.getElementById('configContent').value;
-            try {
-                const res = await fetch(API_CONFIG + '/' + encodeURIComponent(configEditType), {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content })
-                });
-                const j = await res.json().catch(() => ({}));
-                if (res.ok) {
-                    showToast('配置已保存');
-                    closeConfigEditor();
-                } else {
-                    showToast('保存失败: ' + (j.error || res.status), 'error');
-                }
-            } catch (err) {
-                showToast('保存失败: ' + err.message, 'error');
-            }
-        }
-
+        
+        // 显示提示
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
