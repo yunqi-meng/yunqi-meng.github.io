@@ -72,19 +72,39 @@ function generateFrontMatter(frontMatter) {
 
 /**
  * 生成文件名（从标题）
+ * 中文等非 ASCII 标题保留为文件名的一部分，避免生成 2026-01-01-.md
  */
 function generateFileName(title) {
   const now = new Date();
   const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-  
-  // 将标题转换为 URL 友好的格式
-  const slug = title
+
+  const asciiSlug = title
     .toLowerCase()
     .replace(/[^\w\s-]/g, '')
     .replace(/\s+/g, '-')
+    .replace(/^-+|-+$/g, '')
     .substring(0, 50);
-  
-  return `${dateStr}-${slug}.md`;
+
+  if (asciiSlug) {
+    return `${dateStr}-${asciiSlug}.md`;
+  }
+
+  let safe = title
+    .replace(/[\\/:*?"<>|\r\n\t]+/g, '')
+    .trim()
+    .substring(0, 60);
+  if (!safe) {
+    safe = `post-${Date.now()}`;
+  }
+  return `${dateStr}-${safe}.md`;
+}
+
+/** 判断 resolved 后的路径是否在目录内（兼容 Windows 路径） */
+function isPathInside(filePath, dir) {
+  const resolved = path.resolve(filePath);
+  const resolvedDir = path.resolve(dir);
+  const rel = path.relative(resolvedDir, resolved);
+  return rel === '' || (!rel.startsWith('..') && !path.isAbsolute(rel));
 }
 
 /**
@@ -125,5 +145,6 @@ module.exports = {
   generateFrontMatter,
   generateFileName,
   getFileInfo,
-  ensureDir
+  ensureDir,
+  isPathInside
 };

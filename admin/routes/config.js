@@ -6,12 +6,40 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
-const { ROOT_DIR } = require('../server');
+const { ROOT_DIR } = require('../paths');
 
 const CONFIG_FILES = {
   site: path.join(ROOT_DIR, '_config.yml'),
   theme: path.join(ROOT_DIR, '_config.butterfly.yml')
 };
+
+/**
+ * GET /api/config - 获取所有配置文件的列表（须先于 /:type 注册）
+ */
+router.get('/', async (req, res) => {
+  try {
+    const configs = [];
+
+    for (const [type, filePath] of Object.entries(CONFIG_FILES)) {
+      try {
+        const stats = await fs.stat(filePath);
+        configs.push({
+          type,
+          path: filePath,
+          size: stats.size,
+          modified: stats.mtime.toISOString()
+        });
+      } catch {
+        // 文件不存在，跳过
+      }
+    }
+
+    res.json({ success: true, configs });
+  } catch (error) {
+    console.error('Error listing configs:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 /**
  * GET /api/config/:type - 获取配置文件内容
@@ -64,34 +92,6 @@ router.put('/:type', async (req, res) => {
     res.json({ success: true, message: 'Config updated successfully' });
   } catch (error) {
     console.error('Error updating config:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
-/**
- * GET /api/config - 获取所有配置文件的列表
- */
-router.get('/', async (req, res) => {
-  try {
-    const configs = [];
-    
-    for (const [type, filePath] of Object.entries(CONFIG_FILES)) {
-      try {
-        const stats = await fs.stat(filePath);
-        configs.push({
-          type,
-          path: filePath,
-          size: stats.size,
-          modified: stats.mtime.toISOString()
-        });
-      } catch {
-        // 文件不存在，跳过
-      }
-    }
-    
-    res.json({ success: true, configs });
-  } catch (error) {
-    console.error('Error listing configs:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });

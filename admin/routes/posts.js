@@ -6,8 +6,8 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
-const { POSTS_DIR } = require('../server');
-const { parseFrontMatter, generateFrontMatter, generateFileName, getFileInfo, ensureDir } = require('../utils/helpers');
+const { POSTS_DIR } = require('../paths');
+const { parseFrontMatter, generateFrontMatter, generateFileName, getFileInfo, ensureDir, isPathInside } = require('../utils/helpers');
 
 /**
  * GET /api/posts - 获取所有文章列表
@@ -43,10 +43,10 @@ router.get('/:fileName', async (req, res) => {
     const filePath = path.join(POSTS_DIR, fileName);
     
     // 安全检查：确保文件在 POSTS_DIR 内
-    if (!filePath.startsWith(POSTS_DIR)) {
+    if (!isPathInside(filePath, POSTS_DIR)) {
       return res.status(403).json({ success: false, error: 'Invalid file path' });
     }
-    
+
     const post = await getFileInfo(filePath);
     res.json({ success: true, post });
   } catch (error) {
@@ -117,10 +117,10 @@ router.put('/:fileName', async (req, res) => {
     const filePath = path.join(POSTS_DIR, fileName);
     
     // 安全检查
-    if (!filePath.startsWith(POSTS_DIR)) {
+    if (!isPathInside(filePath, POSTS_DIR)) {
       return res.status(403).json({ success: false, error: 'Invalid file path' });
     }
-    
+
     // 读取现有文件
     const existingContent = await fs.readFile(filePath, 'utf-8');
     const { frontMatter: existingFrontMatter } = parseFrontMatter(existingContent);
@@ -158,10 +158,10 @@ router.delete('/:fileName', async (req, res) => {
     const filePath = path.join(POSTS_DIR, fileName);
     
     // 安全检查
-    if (!filePath.startsWith(POSTS_DIR)) {
+    if (!isPathInside(filePath, POSTS_DIR)) {
       return res.status(403).json({ success: false, error: 'Invalid file path' });
     }
-    
+
     // 删除文章文件
     await fs.unlink(filePath);
     

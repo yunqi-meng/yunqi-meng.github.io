@@ -6,7 +6,8 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const path = require('path');
-const { POSTS_DIR } = require('../server');
+const { POSTS_DIR } = require('../paths');
+const { isPathInside } = require('../utils/helpers');
 
 /**
  * POST /api/upload/:postName - 上传图片到文章资源文件夹
@@ -154,7 +155,7 @@ router.delete('/:postName/:filename', async (req, res) => {
     const filePath = path.join(POSTS_DIR, postName, filename);
     
     // 安全检查
-    if (!filePath.startsWith(POSTS_DIR)) {
+    if (!isPathInside(filePath, POSTS_DIR)) {
       return res.status(403).json({ success: false, error: 'Invalid file path' });
     }
     
