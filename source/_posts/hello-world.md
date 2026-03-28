@@ -1,10 +1,10 @@
 ---
 title: Hello World
-categories: 
-tags: 
+categories:
+tags:
 published: true
-updated: 2026-03-28T09:52:29.027Z
-cover: http://127.0.0.1:4007/posts-assets/hello-world/image1.jpeg
+updated: 2026-03-28T10:53:22.541Z
+cover: /hello-world/image1.jpeg
 ---
 {% asset_img image1.jpeg %}
 {% asset_img 13e652de20bf732f420b18ef1427487e.jpg %}
