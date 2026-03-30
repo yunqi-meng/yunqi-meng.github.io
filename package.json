@@ -34,7 +34,7 @@
     "hexo-server": "^3.0.0",
     "hexo-theme-butterfly": "^5.5.4",
     "hexo-wordcount": "^6.0.1",
-    "sharp": "^0.33.0"
+    "sharp": "^0.34.5"
   },
   "engines": {
     "node": ">=18.0.0"
