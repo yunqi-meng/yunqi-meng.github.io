@@ -14,7 +14,7 @@
     "version": "8.1.1"
   },
   "dependencies": {
-    "express": "^4.22.1",
+    "express": "^5.2.1",
     "hexo": "^8.0.0",
     "hexo-filter-mathjax": "^0.9.1",
     "hexo-generator-archive": "^2.0.0",
